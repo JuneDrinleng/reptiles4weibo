@@ -12,9 +12,10 @@ def main():
         with open(latest_file_path, 'r') as f:
             latest_file_first_line = (f.readline().strip()).split(' ')[-1]
         if realtime_hot_top == latest_file_first_line:
-            print("Hot search has not changed")
+            now = datetime.now().strftime('%Y-%m-%d-%H-%M')
+            print(f"Time:{now}, Statues:Hot search has not changed")
         else:
-            print("Hot search has changed")
+            print(f"Time:{now}, Statues:Hot search has changed")
             compare_content(log_path, realtime_hot_str, to_email, from_email, password,smtp_server,port)
     time.sleep(10) # 10 seconds
 

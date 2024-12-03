@@ -37,9 +37,10 @@ def send_email(email_subject, email_body, to_email_list,from_email,password,smtp
             text = msg.as_string()
             server.sendmail(from_email, to_email, text)
             server.quit()
-            print("Email sent successfully")
+            now = datetime.now().strftime('%Y-%m-%d-%H-%M')
+            print(f"Time:{now},Status:Email sent successfully")
         except Exception as e:
-            print(f"Failed to send email: {e}")
+            print(f"Time:{now},Status:Failed to send email: {e}")
 
 def check_path(file_path):
     if not os.path.exists(file_path):
