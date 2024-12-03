@@ -1,0 +1,5 @@
+{
+    "from_email": "your_send@email.com",
+    "target": ["your_recieve_1@email.com","your_recieve_2@email.com"],
+    "password": "password"
+}
