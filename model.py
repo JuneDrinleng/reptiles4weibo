@@ -19,7 +19,7 @@ def hot_search(url):
     realtime_hot_top = realtime_hot_str.splitlines()[0]
     return realtime_hot_str,realtime_hot_top
 
-def send_email(email_subject, email_body, to_email_list,from_email,password):
+def send_email(email_subject, email_body, to_email_list,from_email,password,smtp_server,port):
     for i in range(len(to_email_list)):
         to_email=to_email_list[i]
         msg = MIMEMultipart()
@@ -30,7 +30,7 @@ def send_email(email_subject, email_body, to_email_list,from_email,password):
         msg.attach(MIMEText(email_body, 'plain'))
 
         try:
-            server = smtplib.SMTP('smtp.163.com', 25)
+            server = smtplib.SMTP(smtp_server, port)
             server.ehlo()
             server.starttls()
             server.login(from_email, password)
@@ -50,7 +50,9 @@ def get_config(config_path):
     to_email = config_data['target']
     from_email = config_data['from_email']
     password = config_data['password']
-    return to_email, from_email, password
+    port=config_data['port']
+    smtp_server=config_data['smtp']
+    return to_email, from_email, password,smtp_server,port
 
 def get_latest_file(file_path):
     files=os.listdir(file_path)
@@ -69,10 +71,10 @@ def get_latest_file(file_path):
     latest_file_path=os.path.join(file_path,latest_file)
     return latest_file_path
 
-def compare_content(log_path,realtime_hot_str,to_email,from_email,password):
+def compare_content(log_path,realtime_hot_str,to_email,from_email,password,smtp_server,port):
         now = datetime.now().strftime('%Y-%m-%d-%H-%M')
         output_path_name=f'{now}_weibo_hot_search.txt'
         output_path=os.path.join(log_path,output_path_name)
         with open(output_path, 'w') as f:
             f.write(realtime_hot_str)
-        send_email(f'微博热搜榜({now})', realtime_hot_str, to_email,from_email,password)
+        send_email(f'微博热搜榜({now})', realtime_hot_str, to_email,from_email,password,smtp_server,port)
