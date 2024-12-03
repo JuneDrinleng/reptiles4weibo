@@ -73,7 +73,7 @@ def get_latest_file(file_path):
     return latest_file_path
 
 def compare_content(log_path,realtime_hot_str,to_email,from_email,password,smtp_server,port):
-        now = datetime.now().strftime('%Y-%m-%d-%H-%M')
+        now = datetime.now().strftime('%Y-%m-%d %H:%M')
         output_path_name=f'{now}_weibo_hot_search.txt'
         output_path=os.path.join(log_path,output_path_name)
         with open(output_path, 'w') as f:

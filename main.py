@@ -17,7 +17,7 @@ def main():
         else:
             print(f"Time:{now}, Statues:Hot search has changed")
             compare_content(log_path, realtime_hot_str, to_email, from_email, password,smtp_server,port)
-    time.sleep(10) # 10 seconds
+    time.sleep(60) # 10 seconds
 
 if __name__ == '__main__':
     url = 'https://weibo.com/ajax/side/hotSearch'
