@@ -11,16 +11,16 @@ def main():
     else:
         with open(latest_file_path, 'r') as f:
             latest_file_first_line = f.readline().strip()
-    if realtime_hot_top != latest_file_first_line:
-        print("Hot search has changed")
-        compare_content(log_path, realtime_hot_str, to_email, from_email, password,smtp_server,port)
-    else:
-        print("Hot search has not changed")
+        if realtime_hot_top != latest_file_first_line:
+            print("Hot search has changed")
+            compare_content(log_path, realtime_hot_str, to_email, from_email, password,smtp_server,port)
+        else:
+            print("Hot search has not changed")
     time.sleep(10) # 10 seconds
 
 if __name__ == '__main__':
     url = 'https://weibo.com/ajax/side/hotSearch'
-    log_path='/root/zhuzilan/github/reptiles4weibo/log'
-    config_path='/root/zhuzilan/github/reptiles4weibo/config.json'
+    log_path='./log'
+    config_path='./config.json'
     main()
     pass
