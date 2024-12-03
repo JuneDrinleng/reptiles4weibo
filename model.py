@@ -30,9 +30,9 @@ def send_email(email_subject, email_body, to_email_list,from_email,password,smtp
         msg.attach(MIMEText(email_body, 'plain'))
 
         try:
-            server = smtplib.SMTP(smtp_server, port)
-            server.ehlo()
-            server.starttls()
+            server = smtplib.SMTP_SSL(smtp_server, port)
+            # server.ehlo()
+            # server.starttls()
             server.login(from_email, password)
             text = msg.as_string()
             server.sendmail(from_email, to_email, text)
