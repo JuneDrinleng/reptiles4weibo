@@ -16,7 +16,7 @@ def hot_search(url):
     realtime_hot = results['realtime']
     realtime_hot_df = pd.DataFrame(realtime_hot)['word']
     realtime_hot_str=realtime_hot_df.to_string(index=True)
-    realtime_hot_top = realtime_hot_str.splitlines()[0]
+    realtime_hot_top = (realtime_hot_str.splitlines()[0]).split(' ')[-1]
     return realtime_hot_str,realtime_hot_top
 
 def send_email(email_subject, email_body, to_email_list,from_email,password,smtp_server,port):

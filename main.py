@@ -10,12 +10,12 @@ def main():
         compare_content(log_path, realtime_hot_str, to_email, from_email, password,smtp_server,port)
     else:
         with open(latest_file_path, 'r') as f:
-            latest_file_first_line = f.readline().strip()
-        if realtime_hot_top != latest_file_first_line:
+            latest_file_first_line = (f.readline().strip()).split(' ')[-1]
+        if realtime_hot_top == latest_file_first_line:
+            print("Hot search has not changed")
+        else:
             print("Hot search has changed")
             compare_content(log_path, realtime_hot_str, to_email, from_email, password,smtp_server,port)
-        else:
-            print("Hot search has not changed")
     time.sleep(10) # 10 seconds
 
 if __name__ == '__main__':
