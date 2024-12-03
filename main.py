@@ -1,4 +1,3 @@
-
 import time
 from model import *
 
@@ -17,12 +16,11 @@ def main():
         compare_content(log_path, realtime_hot_str, to_email, from_email, password,smtp_server,port)
     else:
         print("Hot search has not changed")
-    time.sleep(1) # 10 seconds
+    time.sleep(60) # 10 seconds
 
 if __name__ == '__main__':
     url = 'https://weibo.com/ajax/side/hotSearch'
-    log_path='./log'
-    config_path='config.json'
-    while True:
-        main()
+    log_path='/root/zhuzilan/github/reptiles4weibo/log'
+    config_path='/root/zhuzilan/github/reptiles4weibo/config.json'
+    main()
     pass

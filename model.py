@@ -46,7 +46,7 @@ def check_path(file_path):
         os.makedirs(file_path)
 
 def get_config(config_path):
-    config_data = json.load(open('config.json'))
+    config_data = json.load(open(config_path))
     to_email = config_data['target']
     from_email = config_data['from_email']
     password = config_data['password']
