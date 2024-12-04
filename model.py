@@ -63,7 +63,7 @@ def get_latest_file(file_path):
     latest_time=None
     for file in files:
         try:
-            file_time = datetime.strptime(file, '%Y-%m-%d-%H-%M_weibo_hot_search.txt')
+            file_time = datetime.strptime(file, '%Y-%m-%d %H:%M_weibo_hot_search.txt')
             if latest_time is None or file_time > latest_time:
                 latest_time = file_time
                 latest_file = file

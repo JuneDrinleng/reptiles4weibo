@@ -14,6 +14,7 @@ def main():
         if realtime_hot_top.strip() == latest_file_first_line.strip():
             now = datetime.now().strftime('%Y-%m-%d-%H-%M')
             print(f"Time:{now}, Statues:Hot search has not changed")
+            pass
         else:
             now = datetime.now().strftime('%Y-%m-%d-%H-%M')
             print(f"Time:{now}, Statues:Hot search has changed")
