@@ -53,7 +53,8 @@ def get_config(config_path):
     password = config_data['password']
     port=config_data['port']
     smtp_server=config_data['smtp']
-    return to_email, from_email, password,smtp_server,port
+    pushplus_token=config_data['pushplus_token']
+    return to_email, from_email, password,smtp_server,port,pushplus_token
 
 def get_latest_file(file_path):
     files=os.listdir(file_path)
@@ -72,10 +73,27 @@ def get_latest_file(file_path):
     latest_file_path=os.path.join(file_path,latest_file)
     return latest_file_path
 
-def compare_content(log_path,realtime_hot_str,to_email,from_email,password,smtp_server,port):
+def compare_content(log_path,realtime_hot_str,to_email,from_email,password,smtp_server,port,pushplus_token=None):
         now = datetime.now().strftime('%Y-%m-%d %H:%M')
         output_path_name=f'{now}_weibo_hot_search.txt'
         output_path=os.path.join(log_path,output_path_name)
         with open(output_path, 'w') as f:
             f.write(realtime_hot_str)
         send_email(f'微博热搜榜({now})', realtime_hot_str, to_email,from_email,password,smtp_server,port)
+        try:
+            data={
+                "token": pushplus_token,
+                "title": f'微博热搜榜({now})',
+                "content": realtime_hot_str
+            }
+            url='http://www.pushplus.plus/send'
+            body=json.dumps(data).encode(encoding='utf-8')
+            headers = {'Content-Type':'application/json'}
+            response = requests.post(url, data=body, headers=headers)
+            if response.status_code == 200:
+                print(f"Time:{now},Status:Pushplus sent successfully")
+            else:
+                print(f"Time:{now},Status:Failed to send pushplus")
+            pass
+        except Exception as e:
+            print(f"Time:{now},Status:Failed to send pushplus: {e}")
