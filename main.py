@@ -11,7 +11,7 @@ def main():
     else:
         with open(latest_file_path, 'r') as f:
             latest_file_first_line = (f.readline().strip()).split(' ')[-1]
-        if realtime_hot_top == latest_file_first_line:
+        if realtime_hot_top.strip() == latest_file_first_line.strip():
             now = datetime.now().strftime('%Y-%m-%d-%H-%M')
             print(f"Time:{now}, Statues:Hot search has not changed")
         else:
