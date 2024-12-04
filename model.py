@@ -54,7 +54,7 @@ def get_config(config_path):
     port=config_data['port']
     smtp_server=config_data['smtp']
     pushplus_token=config_data['pushplus_token']
-    return to_email, from_email, password,smtp_server,port,pushplus_token
+    return to_email, from_email, password,smtp_server,port,pushplus_token,config_data['webhook']
 
 def get_latest_file(file_path):
     files=os.listdir(file_path)
@@ -73,27 +73,66 @@ def get_latest_file(file_path):
     latest_file_path=os.path.join(file_path,latest_file)
     return latest_file_path
 
-def compare_content(log_path,realtime_hot_str,to_email,from_email,password,smtp_server,port,pushplus_token=None):
+
+def send_text(webhook, content, mentioned_list=None, mentioned_mobile_list=None):
+    header = {
+                "Content-Type": "application/json",
+                "Charset": "UTF-8"
+                }
+    data ={
+ 
+        "msgtype": "text",
+        "text": {
+            "content": content
+            ,"mentioned_list":mentioned_list
+            ,"mentioned_mobile_list":mentioned_mobile_list
+        }
+    }
+    data = json.dumps(data)
+    info = requests.post(url=webhook, data=data, headers=header)
+    
+
+def send_md(webhook, content):
+    header = {
+                "Content-Type": "application/json",
+                "Charset": "UTF-8"
+                }
+    data ={
+ 
+        "msgtype": "markdown",
+        "markdown": {
+            "content": content
+        }
+    }
+    data = json.dumps(data)
+    info = requests.post(url=webhook, data=data, headers=header)
+
+def pushplus_push(pushplus_token, title, content):
+    try:
+        data={
+            "token": pushplus_token,
+            "title": title,
+            "content": content
+        }
+        url='http://www.pushplus.plus/send'
+        body=json.dumps(data).encode(encoding='utf-8')
+        headers = {'Content-Type':'application/json'}
+        response = requests.post(url, data=body, headers=headers)
+        if response.status_code == 200:
+            print(f"Time:{now},Status:Pushplus sent successfully")
+        else:
+            print(f"Time:{now},Status:Failed to send pushplus")
+        pass
+    except Exception as e:
+        print(f"Time:{now},Status:Failed to send pushplus: {e}")
+
+def compare_content(log_path,realtime_hot_str,to_email,from_email,password,smtp_server,port,pushplus_token=None,webhook_key=None):
         now = datetime.now().strftime('%Y-%m-%d %H:%M')
         output_path_name=f'{now}_weibo_hot_search.txt'
         output_path=os.path.join(log_path,output_path_name)
         with open(output_path, 'w') as f:
             f.write(realtime_hot_str)
         send_email(f'微博热搜榜({now})', realtime_hot_str, to_email,from_email,password,smtp_server,port)
-        try:
-            data={
-                "token": pushplus_token,
-                "title": f'微博热搜榜({now})',
-                "content": realtime_hot_str
-            }
-            url='http://www.pushplus.plus/send'
-            body=json.dumps(data).encode(encoding='utf-8')
-            headers = {'Content-Type':'application/json'}
-            response = requests.post(url, data=body, headers=headers)
-            if response.status_code == 200:
-                print(f"Time:{now},Status:Pushplus sent successfully")
-            else:
-                print(f"Time:{now},Status:Failed to send pushplus")
-            pass
-        except Exception as e:
-            print(f"Time:{now},Status:Failed to send pushplus: {e}")
+        pushplus_push(pushplus_token=pushplus_token, title=f'微博热搜榜({now})', content=realtime_hot_str)
+        # send_text(webhook_key, content=f'微博热搜榜({now})\n{realtime_hot_str}')
+        send_md(webhook_key, content=f'# 微博热搜榜({now})\n{realtime_hot_str}')
