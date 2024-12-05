@@ -33,6 +33,7 @@ def send_email(email_subject, email_body, to_email_list,from_email,password,smtp
             server = smtplib.SMTP_SSL(smtp_server, port)
             # server.ehlo()
             # server.starttls() ## when ssl it is no need
+
             server.login(from_email, password)
             text = msg.as_string()
             server.sendmail(from_email, to_email, text)

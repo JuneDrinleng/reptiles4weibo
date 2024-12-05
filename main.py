@@ -32,9 +32,10 @@ def main():
             pushplus_token,webhook_key)
     time.sleep(60) # 10 seconds
 
+
 if __name__ == '__main__':
     url = 'https://weibo.com/ajax/side/hotSearch'
-    log_path='/root/zhuzilan/github/reptiles4weibo/log'
-    config_path='/root/zhuzilan/github/reptiles4weibo/config.json'
+    log_path='./log'
+    config_path='./config.json'
     main()
     pass
