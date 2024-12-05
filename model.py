@@ -15,7 +15,7 @@ def hot_search(url):
     results = response.json()['data']
     realtime_hot = results['realtime']
     realtime_hot_df = pd.DataFrame(realtime_hot)['word']
-    realtime_hot_str=realtime_hot_df.to_string(index=True)
+    realtime_hot_str=realtime_hot_df.to_string(index=False)
     realtime_hot_top = (realtime_hot_str.splitlines()[0]).split(' ')[-1]
     return realtime_hot_str,realtime_hot_top
 
@@ -106,6 +106,7 @@ def send_md(webhook, content):
     }
     data = json.dumps(data)
     info = requests.post(url=webhook, data=data, headers=header)
+    print(f"Time:{datetime.now().strftime('%Y-%m-%d %H:%M')},Status:Webhook sent successfully")
 
 def pushplus_push(pushplus_token, title, content):
     try:
@@ -118,6 +119,7 @@ def pushplus_push(pushplus_token, title, content):
         body=json.dumps(data).encode(encoding='utf-8')
         headers = {'Content-Type':'application/json'}
         response = requests.post(url, data=body, headers=headers)
+        now = datetime.now().strftime('%Y-%m-%d %H:%M')
         if response.status_code == 200:
             print(f"Time:{now},Status:Pushplus sent successfully")
         else:
@@ -134,5 +136,5 @@ def compare_content(log_path,realtime_hot_str,to_email,from_email,password,smtp_
             f.write(realtime_hot_str)
         send_email(f'微博热搜榜({now})', realtime_hot_str, to_email,from_email,password,smtp_server,port)
         pushplus_push(pushplus_token=pushplus_token, title=f'微博热搜榜({now})', content=realtime_hot_str)
-        # send_text(webhook_key, content=f'微博热搜榜({now})\n{realtime_hot_str}')
-        send_md(webhook_key, content=f'# 微博热搜榜({now})\n{realtime_hot_str}')
+        send_text(webhook_key, content=f'微博热搜榜({now})\n{realtime_hot_str}')
+        # send_md(webhook_key, content=f'# 微博热搜榜({now})\n{realtime_hot_str}')
