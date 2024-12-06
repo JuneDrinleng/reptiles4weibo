@@ -139,3 +139,31 @@ def compare_content(log_path,realtime_hot_str,to_email,from_email,password,smtp_
         pushplus_push(pushplus_token=pushplus_token, title=f'微博热搜榜({now})', content=realtime_hot_str)
         send_text(webhook_key, content=f'微博热搜榜({now})\n{realtime_hot_str}')
         # send_md(webhook_key, content=f'# 微博热搜榜({now})\n{realtime_hot_str}')
+
+def hot_top_history_manager(new_hot_top,hot_top_history_path):
+    max_lines=24
+    new_hot_top_n=new_hot_top+'\n'
+    try:
+        with open(hot_top_history_path, "r") as f:
+            lines = f.readlines()
+        if new_hot_top_n in lines:
+            print(f"{new_hot_top} is existing")
+            return 1
+        else:
+            lines.append(new_hot_top_n)
+            if len(lines) > max_lines:
+                lines = lines[-max_lines:]
+            with open(hot_top_history_path, "w") as f:
+                f.writelines(lines)
+            print(f"add {new_hot_top} succeed!")
+            return 0
+    except FileNotFoundError:
+        with open(hot_top_history_path, "w") as f:
+            f.write(new_hot_top_n)
+        print(f"history file is not exist, created just now and add {new_hot_top}")
+        return 0
+    except Exception as e:
+        print(f"error code:{e}")
+        return 2
+    pass
+
