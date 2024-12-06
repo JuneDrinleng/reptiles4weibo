@@ -135,10 +135,13 @@ def compare_content(log_path,realtime_hot_str,to_email,from_email,password,smtp_
         output_path=os.path.join(log_path,output_path_name)
         with open(output_path, 'w') as f:
             f.write(realtime_hot_str)
-        send_email(f'微博热搜榜({now})', realtime_hot_str, to_email,from_email,password,smtp_server,port)
-        pushplus_push(pushplus_token=pushplus_token, title=f'微博热搜榜({now})', content=realtime_hot_str)
-        send_text(webhook_key, content=f'微博热搜榜({now})\n{realtime_hot_str}')
-        # send_md(webhook_key, content=f'# 微博热搜榜({now})\n{realtime_hot_str}')
+        if to_email and password and from_email and smtp_server and port is not None: 
+            send_email(f'微博热搜榜({now})', realtime_hot_str, to_email,from_email,password,smtp_server,port)
+        if pushplus_token is not None:
+            pushplus_push(pushplus_token=pushplus_token, title=f'微博热搜榜({now})', content=realtime_hot_str)
+        if webhook_key is not None:
+            send_text(webhook_key, content=f'微博热搜榜({now})\n{realtime_hot_str}')
+            # send_md(webhook_key, content=f'# 微博热搜榜({now})\n{realtime_hot_str}')
 
 def hot_top_history_manager(new_hot_top,hot_top_history_path):
     max_lines=24
